@@ -2,7 +2,7 @@
 {
 	"name"        "Door Display"
 	"version"     "1.4"
-	"author_name" "Dan and Garnet"
+	"author_name" "Dan and Garnet. Modified by time"
 	"info"        "Displays DarkRP door information."
 	"override"    "0"
 }
