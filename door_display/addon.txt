@@ -1,0 +1,8 @@
+"AddonInfo"
+{
+	"name"        "Door Display"
+	"version"     "1.4"
+	"author_name" "Dan and Garnet"
+	"info"        "Displays DarkRP door information."
+	"override"    "0"
+}
