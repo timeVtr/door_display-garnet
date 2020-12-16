@@ -31,6 +31,7 @@ local PurchaseOutlineColor = Color( 0, 0, 0, 255 )
 
 
 local DrawDistance = 250
+local DrawDistanceSquared = 62500
 
 
 
@@ -364,10 +365,10 @@ hook.Add( "PostDrawTranslucentRenderables", "sh_doordisplay_drawdisplay", functi
 		local dinfo = doorInfo[door]
 
 		local shootpos = ply:GetShootPos()
-		local dist = door:GetPos():Distance( shootpos )
+		local dist = door:GetPos():DistToSqr( shootpos )
 
-		if dist <= DrawDistance then
-
+		if dist <= DrawDistanceSquared then
+			dist = math.sqrt(dist)
 			local CT = CurTime()
 
 			local aim_vector = ply:GetAimVector()
