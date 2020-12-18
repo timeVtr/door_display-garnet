@@ -136,7 +136,6 @@ surface.CreateFont( "DoorDisplayTrebuchetSmall", {
 	local ents_GetAll = ents.GetAll
 
 --
-local doorInfo = {}
 
 local function computeFadeAlpha( time, dur, sa, ea, start )
 
@@ -246,48 +245,52 @@ local function getAllowedGroupNames( door )
 	return ret
 end
 
--- store all the doors in a separate table
 local allDoors = {}
-for _, door in ipairs(ents_GetAll()) do
-	if isDoor( door ) and isOwnable(door) then
-		allDoors[#allDoors+1] = door
-	end
-end
+local doorInfo = {}
 
-for _, door in ipairs(allDoors) do
-	local dinfo = doorInfo[door]
-	if !dinfo then
-		dinfo = {
-			coownCollapsed = true
-		}
-		local dimens = door:OBBMaxs() - door:OBBMins()
-		local center = door:OBBCenter()
-		
-		local min, j 
-		for i=1, 3 do
-			if !min or dimens[i] <= min then
-				j = i
-				min = dimens[i]
+hook.Add("InitPostEntity", "prestore_all_door_data", function() 
+	-- store all the doors in a separate table
+	for _, door in ipairs(ents_GetAll()) do
+		if isDoor( door ) and isOwnable(door) then
+			allDoors[#allDoors+1] = door
+		end
+	end
+
+	for _, door in ipairs(allDoors) do
+		local dinfo = doorInfo[door]
+		if !dinfo then
+			dinfo = {
+				coownCollapsed = true
+			}
+			local dimens = door:OBBMaxs() - door:OBBMins()
+			local center = door:OBBCenter()
+			
+			local min, j 
+			for i=1, 3 do
+				if !min or dimens[i] <= min then
+					j = i
+					min = dimens[i]
+				end
 			end
+
+			local norm = Vector()
+			norm[j] = 1
+
+			local lang = Angle( 0, norm:Angle().y + 90, 90 )
+
+			if door:GetClass() == "prop_door_rotating" then
+				dinfo.lpos = Vector( center.x, center.y, 30 ) + lang:Up() * (min / 6)
+			else
+				dinfo.lpos = center + Vector( 0, 0, 20 ) + lang:Up() * ((min / 2) - 0.1)
+			end
+
+			dinfo.lang = lang
+
+			doorInfo[door] = dinfo
+
 		end
-
-		local norm = Vector()
-		norm[j] = 1
-
-		local lang = Angle( 0, norm:Angle().y + 90, 90 )
-
-		if door:GetClass() == "prop_door_rotating" then
-			dinfo.lpos = Vector( center.x, center.y, 30 ) + lang:Up() * (min / 6)
-		else
-			dinfo.lpos = center + Vector( 0, 0, 20 ) + lang:Up() * ((min / 2) - 0.1)
-		end
-
-		dinfo.lang = lang
-
-		doorInfo[door] = dinfo
-
 	end
-end
+end)
 
 local ply = LocalPlayer()
 
