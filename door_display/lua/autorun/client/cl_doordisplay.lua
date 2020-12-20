@@ -31,7 +31,7 @@ local PurchaseOutlineColor = Color( 0, 0, 0, 255 )
 
 
 local DrawDistance = 250
-local DrawDistanceSquared = 62500
+local DrawDistanceSquared = DrawDistance * DrawDistance
 
 
 
